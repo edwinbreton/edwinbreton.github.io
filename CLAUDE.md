@@ -29,7 +29,8 @@ see the `min-width` query at the end of `style.css`.
 
 ## Files
 ```
-index.html                 About (home): intake header, bio, recent art, latest posts
+index.html                 About (home): intake header, bio, recent art
+                           (no latest-posts section until there's a real post)
 art.html                   Gallery of taped Polaroids
 blog/index.html            List of posts, newest first
 blog/YYYY-MM-DD-slug.html  One file per post
@@ -78,19 +79,22 @@ in `index.html`.
 
 **Add a blog post:** copy `blog/2026-10-19-opening-the-file.html` to a new
 dated filename, update `<title>`, meta description, `<time>`, `<h1>`, and
-body. Then add an entry to the top of `blog/index.html` and update
-"Latest entries" on `index.html`.
+body. Then add an entry to the top of `blog/index.html`, and add back a
+"Latest posts" section on `index.html` (removed for now; copy its old shape
+from `blog/index.html`'s intro + `.log` pattern).
+
+`blog/2026-10-19-opening-the-file.html` itself is sample content, not a real
+post: kept only as the copy-template above and as a demo of a Polaroid taped
+into an article, but deliberately unlinked from `blog/index.html` and
+`index.html` so it doesn't show as a real entry. Once there's a first real
+post, this file and `images/art-02.svg` (the placeholder art it uses) can go.
 
 ## Roadmap (not started)
 - `resume.html` in the same typed style (no phone or address).
-- Custom domain: edwinbreton.com, registered at Porkbun (Oct 2026), not
-  connected yet. Order per GitHub docs: (1) verify the domain in GitHub
-  profile Settings > Pages (TXT record at Porkbun, keep it forever),
-  (2) add the domain in repo Settings > Pages (GitHub commits the CNAME file),
-  (3) at Porkbun, delete default parking records and any wildcard `*` record,
-  add the four GitHub A records, four AAAA records, and `www` CNAME to
-  `edwinbreton.github.io`, (4) once the cert is issued, tick Enforce HTTPS.
-  Claiming on GitHub before pointing DNS prevents domain takeover.
+- Custom domain: edwinbreton.com, registered at Porkbun (Oct 2026). Connected
+  and live: domain verified on GitHub, CNAME file committed, Porkbun DNS
+  points at GitHub's A/AAAA records plus a `www` CNAME to
+  `edwinbreton.github.io`, and Enforce HTTPS is on.
 - Possibly a simple script to generate the blog list once posts pile up.
 
 ## Before pushing (QA checklist)
