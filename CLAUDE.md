@@ -9,7 +9,13 @@ The whole site is a **typewritten police case file**. Everything should look
 struck on a typewriter onto white, lightly textured paper. Photos and art are
 **Polaroids taped onto the page**. Section breaks are **typed underscore rules**.
 Keep the theme in the visual language; keep the words plain (nav says
-"About / Art / Blog", not "Evidence Locker").
+"About / Art / Blog", not "Evidence Locker"; headings say "About", "Recent
+art", "Latest posts", not "Statement" or "Recent evidence").
+
+On a phone, the sheet fills the screen edge to edge. Past phone width it
+reads as a literal page of paper resting on a desk (`--desk`), and widens to
+fill most of the viewport rather than staying capped at a fixed column width;
+see the `min-width` query at the end of `style.css`.
 
 ## Stack and rules
 - Plain HTML + one CSS file. **No build step, no framework, no JS** unless a
@@ -24,22 +30,24 @@ Keep the theme in the visual language; keep the words plain (nav says
 ## Files
 ```
 index.html                 About (home): intake header, bio, recent art, latest posts
-art.html                   Gallery of taped Polaroids ("exhibits")
+art.html                   Gallery of taped Polaroids
 blog/index.html            List of posts, newest first
 blog/YYYY-MM-DD-slug.html  One file per post
 css/style.css              All styles; design tokens at the top
-images/                    Art and photos (current SVGs are placeholders)
+images/                    Art and photos (art-02.svg is still a placeholder,
+                           used by the sample blog post)
 ```
 
 ## Design tokens (defined in `:root` in css/style.css)
 | Token | Value | Use |
 |---|---|---|
-| `--paper` | #fdfcf9 | page background (plus SVG noise texture) |
+| `--paper` | #ffffff | `.sheet` background: literally white (plus SVG noise texture) |
 | `--ink` | #24221f | body text, faded ribbon black |
 | `--ink-soft` | #67625b | dates, rules, dot leaders |
-| `--ribbon-red` | #a3241b | file numbers, exhibit tags, current nav item, focus ring |
+| `--ribbon-red` | #a3241b | current nav item, focus ring |
 | `--pen-blue` | #27386a | handwritten Polaroid captions only |
 | `--manila` | #ead9a6 | text selection |
+| `--desk` | #dcd7c9 | page background past phone width, behind `.sheet` |
 
 Fonts (Google Fonts): **Courier Prime** for body, **Special Elite** for
 headings, **Reenie Beanie** for handwritten captions only. Don't add more.
@@ -52,17 +60,21 @@ headings, **Reenie Beanie** for handwritten captions only. Don't add more.
   LABEL . . . . value rows (home page only).
 - **Polaroid**: `<figure class="polaroid">` with an `<img>` and a
   `<figcaption>`. Tape is automatic. Change the angle with
-  `style="--tilt: 2deg"`; keep tilts between -3deg and 3deg.
-- **Exhibit tag**: `<span class="exhibit">Exhibit G</span>` inside a caption.
+  `style="--tilt: 2deg"`; keep tilts between -3deg and 3deg. Square crop.
+- **Photo**: `<figure class="polaroid photo">`, same markup as a Polaroid
+  but keeps the image's own proportions instead of a square crop. Use it
+  for art a square crop would cut into (a two-page spread, two subjects
+  side by side); otherwise use a plain Polaroid.
 - **Evidence board**: `<ul class="evidence-board">` of `<li>` Polaroids.
-  Angles vary automatically by position.
+  Angles vary automatically by position. (Name is a CSS class only now;
+  no "Exhibit" labels or file numbers show on the page anymore.)
 - **Case log**: `<ol class="log">` entries with `<time>`, `<h3>` link, summary.
 
 ## Common tasks
 **Add an art piece:** put the image in `images/`, copy an `<li>` in
-`art.html`, set `src`, `alt`, next exhibit letter, and caption. Newest goes
-first. If it should appear on the home page, update the three items in
-`.evidence-board--recent` in `index.html`.
+`art.html`, set `src`, `alt`, and caption. Newest goes first. If it should
+appear on the home page, update the three items in `.evidence-board--recent`
+in `index.html`.
 
 **Add a blog post:** copy `blog/2026-10-19-opening-the-file.html` to a new
 dated filename, update `<title>`, meta description, `<time>`, `<h1>`, and

@@ -10,7 +10,7 @@
      6. Polaroids + tape
      7. Evidence board (art grid)
      8. Case log (blog list) + entry pages
-     9. Footer, focus, small screens
+     9. Footer, focus, responsive screens
    ============================================================= */
 
 
@@ -20,14 +20,15 @@
 :root {
   color-scheme: light;               /* the paper stays white, even in dark mode */
 
-  --paper:      #fdfcf9;             /* bright, barely-warm white */
+  --paper:      #ffffff;             /* the sheet itself: literally white */
   --ink:        #24221f;             /* faded black typewriter ribbon */
   --ink-soft:   #67625b;             /* second-carbon gray: dates, rules */
   --ribbon-red: #a3241b;             /* red half of a two-color ribbon */
   --pen-blue:   #27386a;             /* ballpoint, for Polaroid captions */
   --manila:     #ead9a6;             /* text selection, folder accents */
   --tape:       rgba(232, 222, 186, 0.82);
-  --polaroid:   #fefefd;
+  --polaroid:   #fdfcf9;             /* bright, barely-warm white: just the photo card now */
+  --desk:       #dcd7c9;             /* surface the sheet rests on, past phone width */
 
   --font-typed: "Courier Prime", "Courier New", Courier, monospace;
   --font-worn:  "Special Elite", "Courier Prime", "Courier New", monospace;
@@ -45,7 +46,7 @@
 /* 2. BASE PAGE ----------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 
-html { background: var(--paper); }
+html { background: var(--desk); }
 
 body {
   margin: 0;
@@ -53,13 +54,7 @@ body {
   font-family: var(--font-typed);
   font-size: var(--step-0);
   line-height: 1.65;
-  background-color: var(--paper);
-  /* Paper texture: an SVG noise filter, drawn by the browser, so
-     there is no image file to download. Two layers: fine grain
-     plus a soft, uneven tone. The radial gradient darkens edges. */
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .29 0 0 0 0 .24 0 0 0 .075 0'/%3E%3C/filter%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .5 0 0 0 0 .4 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23t)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
-    radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(110, 96, 70, 0.09) 100%);
+  background: var(--desk);
   /* Ink bleed: a hair of blur makes type look struck, not rendered */
   text-shadow: 0 0 0.6px rgba(36, 34, 31, 0.45);
 }
@@ -70,6 +65,15 @@ body {
   max-width: 46rem;
   margin: 0 auto;
   padding: 2.5rem 1.5rem 4rem;
+  background-color: var(--paper);
+  /* Paper texture: an SVG noise filter, drawn by the browser, so
+     there is no image file to download. Two layers: fine grain
+     plus a soft, uneven tone. The radial gradient darkens edges.
+     Lives on .sheet, not body, so what you see is one page of
+     paper, not the whole browser tab painted like a legal pad. */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .29 0 0 0 0 .24 0 0 0 .075 0'/%3E%3C/filter%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .5 0 0 0 0 .4 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23t)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(110, 96, 70, 0.09) 100%);
 }
 
 h1, h2, h3 {
@@ -139,11 +143,6 @@ hr::before {
 }
 .intake > * { min-width: 0; }           /* lets grid columns shrink on phones */
 
-.intake__file {
-  color: var(--ribbon-red);
-  margin-bottom: 0.25rem;
-}
-
 .intake__name {
   font-size: var(--step-3);
   margin-bottom: 1.5rem;
@@ -175,6 +174,13 @@ hr::before {
 }
 
 .intake__fields dd { margin: 0; text-align: right; }
+
+/* Lets the portrait hang down past the header and overlap the
+   typed rule right below it, like it's taped on top of the fold. */
+.intake .polaroid {
+  margin-bottom: -4.5rem;
+  z-index: 1;
+}
 
 
 /* 6. POLAROIDS + TAPE ----------------------------------------
@@ -227,26 +233,28 @@ hr::before {
   z-index: 1;
 }
 
-.exhibit {
-  display: block;
-  margin-bottom: 0.15rem;
-  font-family: var(--font-typed);
-  font-size: var(--step--1);
-  color: var(--ribbon-red);
+/* A .polaroid that keeps its own proportions instead of a forced
+   square crop: for art where squaring it off would cut into the
+   piece, like a two-page spread or two subjects side by side.
+   Everything else (tape, shadow, caption) stays the same; add the
+   class alongside .polaroid: <figure class="polaroid photo"> */
+.photo img {
+  aspect-ratio: auto;
 }
 
-
 /* 7. EVIDENCE BOARD (art grid) -------------------------------
-   auto-fill makes as many columns as fit; min() keeps a single
-   column from overflowing very narrow phones.                 */
+   auto-fit makes as many columns as fit, and collapses any extra
+   ones instead of leaving blank reserved columns past the last
+   photo. min() keeps a single column from overflowing very
+   narrow phones. */
 .evidence-board {
   list-style: none;
   padding: 0;
   margin: 2.75rem 0 1rem;
   max-width: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
-  gap: 3.25rem 2.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: 3.75rem 2.5rem;
 }
 
 /* :nth-child() varies the angles so the board looks hand-placed */
@@ -271,7 +279,7 @@ hr::before {
 .entry .polaroid { max-width: 18rem; margin: 2.5rem auto 2.75rem; }
 
 
-/* 9. FOOTER, FOCUS, SMALL SCREENS ---------------------------- */
+/* 9. FOOTER, FOCUS, RESPONSIVE SCREENS ------------------------ */
 .page-foot { color: var(--ink-soft); font-size: var(--step--1); }
 .page-foot p { margin-bottom: 0.4rem; }
 
@@ -288,4 +296,23 @@ hr::before {
 
   .evidence-board--recent { grid-template-columns: repeat(2, 1fr); gap: 2.5rem 1.5rem; }
   .evidence-board--recent li:nth-child(3) { display: none; }
+}
+
+/* Past phone width, pull the sheet off the screen edges so the
+   desk shows around it, and let it use most of the available
+   width instead of staying capped at a fixed column width. */
+@media (min-width: 48rem) {
+  body { padding: 2.5rem 2rem; }
+
+  .sheet {
+    max-width: min(92vw, 80rem);
+    box-shadow: 0 25px 55px -30px rgba(38, 32, 20, 0.45);
+  }
+
+  /* The sheet is much wider than the old 46rem column now, so let
+     paragraphs and lists (bio text, the blog list) breathe a bit
+     more instead of stranding them in a narrow strip with a wall
+     of empty paper beside them. Still well short of the full sheet
+     width, so lines stay easy to read. */
+  p, ul, ol { max-width: 80ch; }
 }
